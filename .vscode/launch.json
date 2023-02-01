@@ -10,7 +10,16 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js",
             "args": [
-                "../vscode"
+                "../kapwing/client"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch autoAdd",
+            "program": "${workspaceFolder}/autoAdd.js",
+            "args": [
+                "../kapwing/client"
             ]
         }
     ]

@@ -1,5 +1,3 @@
-module.exports.targetTsconfig = 'tsconfig.strictNullChecks.json';
+module.exports.targetTsconfig = "tsconfig.uncheckedIndex.json";
 
-module.exports.skippedFiles = new Set([
-    
-])
+module.exports.skippedFiles = new Set([]);

@@ -10,14 +10,18 @@ const config = require('./config');
  */
 const forEachFileInSrc = (srcRoot, options) => {
     return new Promise((resolve, reject) => {
-        glob(`${srcRoot}/vs/**/*.ts`, (err, files) => {
+        glob(`${srcRoot}/**/*.{ts,tsx}`, (err, files) => {
             if (err) {
                 return reject(err);
             }
 
-            return resolve(files.filter(file =>
-                !file.endsWith('.d.ts')
-                && (options && options.includeTests ? true : !file.endsWith('.test.ts'))));
+            return resolve(files.filter(file => {
+                if (file.endsWith('.d.ts')) return false
+                if (options && options.includeTests) {
+                    return !file.endsWith('.test.ts') && !file.endsWith('.test.tsx')
+                }
+                return true
+            }));
         })
     });
 };
@@ -31,7 +35,7 @@ module.exports.forEachFileInSrc = forEachFileInSrc;
 module.exports.forStrictNullCheckEligibleFiles = async (vscodeRoot, forEach, options) => {
     const srcRoot = path.join(vscodeRoot, 'src');
 
-    const tsconfig = require(path.join(srcRoot, config.targetTsconfig));
+    const tsconfig = require(path.join(vscodeRoot, config.targetTsconfig));
     const checkedFiles = await getCheckedFiles(tsconfig, srcRoot);
 
     const imports = new Map();
@@ -72,20 +76,22 @@ module.exports.forStrictNullCheckEligibleFiles = async (vscodeRoot, forEach, opt
 
 async function getCheckedFiles(tsconfig, srcRoot) {
     const set = new Set(tsconfig.files.map(include => path.join(srcRoot, include)));
-    const includes = tsconfig.include.map(include => {
-        return new Promise((resolve, reject) => {
-            glob(path.join(srcRoot, include), (err, files) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                for (const file of files) {
-                    set.add(file);
-                }
-                resolve();
-            })
+    if (tsconfig.include) {
+        const includes = tsconfig.include.map(include => {
+            return new Promise((resolve, reject) => {
+                glob(path.join(srcRoot, include), (err, files) => {
+                    if (err) {
+                        return reject(err);
+                    }
+    
+                    for (const file of files) {
+                        set.add(file);
+                    }
+                    resolve();
+                })
+            });
         });
-    });
-    await Promise.all(includes);
+        await Promise.all(includes);
+    }
     return set;
 }
