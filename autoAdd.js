@@ -14,9 +14,9 @@ const buildCompletePattern =
   /Found (\d+) errors?\. Watching for file changes\./gi;
 
 forUncheckedIndexEligbleFiles(vscodeRoot, () => {}).then(async (files) => {
-  const tsconfigPath = path.join(srcRoot, config.targetTsconfig);
+  const tsconfigPath = path.join(vscodeRoot, config.targetTsconfig);
 
-  const child = child_process.spawn("tsc", ["-p", tsconfigPath, "--watch"]);
+  const child = child_process.spawn("yarn", ["tsc", "-p", tsconfigPath, "--watch"]);
   for (const file of files) {
     await tryAutoAddStrictNulls(child, tsconfigPath, file);
   }
@@ -34,7 +34,7 @@ function tryAutoAddStrictNulls(child, tsconfigPath, file) {
     // Config on accept
     const newConfig = Object.assign({}, originalConifg);
     newConfig.files = Array.from(
-      new Set(originalConifg.files.concat("./" + relativeFilePath).sort())
+      new Set(originalConifg.files.concat("./src/" + relativeFilePath).sort())
     );
 
     fs.writeFileSync(tsconfigPath, JSON.stringify(newConfig, null, "\t"));
