@@ -9,26 +9,31 @@ const config = require("./config");
  * @param {{ includeTests: boolean }} [options]
  */
 const forEachFileInSrc = (srcRoot, options) => {
+  const rootKapwing = srcRoot.substring(0, srcRoot.length - 10);
+  const sharedCodePath = path.join(rootKapwing, "/shared/src");
   return new Promise((resolve, reject) => {
-    glob(`${srcRoot}/**/*.{ts,tsx}`, (err, files) => {
-      if (err) {
-        return reject(err);
-      }
+    glob(
+      `{${srcRoot}/**/*.{ts,tsx},${sharedCodePath}/**/*.{ts,tsx}}`,
+      (err, files) => {
+        if (err) {
+          return reject(err);
+        }
 
-      return resolve(
-        files.filter((file) => {
-          if (file.endsWith(".d.ts")) return false;
-          if (
-            options &&
-            !options.includeTests &&
-            (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))
-          ) {
-            return false;
-          }
-          return true;
-        })
-      );
-    });
+        return resolve(
+          files.filter((file) => {
+            if (file.endsWith(".d.ts")) return false;
+            if (
+              options &&
+              !options.includeTests &&
+              (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))
+            ) {
+              return false;
+            }
+            return true;
+          })
+        );
+      }
+    );
   });
 };
 module.exports.forEachFileInSrc = forEachFileInSrc;
