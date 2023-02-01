@@ -18,7 +18,11 @@ const forEachFileInSrc = (srcRoot, options) => {
       return resolve(
         files.filter((file) => {
           if (file.endsWith(".d.ts")) return false;
-          if (options && !options.includeTests && (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))) {
+          if (
+            options &&
+            !options.includeTests &&
+            (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))
+          ) {
             return false;
           }
           return true;
@@ -42,7 +46,7 @@ module.exports.forUncheckedIndexEligbleFiles = async (
   const srcRoot = path.join(vscodeRoot, "src");
 
   const tsconfig = require(path.join(vscodeRoot, config.targetTsconfig));
-  const checkedFiles = await getCheckedFiles(tsconfig, srcRoot);
+  const checkedFiles = await getCheckedFiles(tsconfig, vscodeRoot);
 
   const imports = new Map();
   const getMemoizedImportsForFile = (file, srcRoot) => {
@@ -55,43 +59,44 @@ module.exports.forUncheckedIndexEligbleFiles = async (
   };
 
   const files = await forEachFileInSrc(srcRoot, options);
-  return files
-    .filter((file) => !checkedFiles.has(file))
-    .filter((file) => !config.skippedFiles.has(path.relative(srcRoot, file)))
-    .filter((file) => {
-      const allProjImports = getMemoizedImportsForFile(file, srcRoot);
+  const uncheckedFiles = files.filter((file) => !checkedFiles.has(file));
+  const uncheckedAndUnskippedFiles = uncheckedFiles.filter(
+    (file) => !config.skippedFiles.has(path.relative(srcRoot, file))
+  );
+  return uncheckedAndUnskippedFiles.filter((file) => {
+    const allProjImports = getMemoizedImportsForFile(file, srcRoot);
 
-      const nonCheckedImports = allProjImports
-        .filter((x) => x !== file)
-        .filter((imp) => {
-          if (checkedFiles.has(imp)) {
-            return false;
-          }
-          // Don't treat cycles as blocking
-          const impImports = getMemoizedImportsForFile(imp, srcRoot);
-          return (
-            impImports
-              .filter((x) => x !== file)
-              .filter((x) => !checkedFiles.has(x)).length !== 0
-          );
-        });
+    const nonCheckedImports = allProjImports
+      .filter((x) => x !== file)
+      .filter((imp) => {
+        if (checkedFiles.has(imp)) {
+          return false;
+        }
+        // Don't treat cycles as blocking
+        const impImports = getMemoizedImportsForFile(imp, srcRoot);
+        return (
+          impImports
+            .filter((x) => x !== file)
+            .filter((x) => !checkedFiles.has(x)).length !== 0
+        );
+      });
 
-      const isEdge = nonCheckedImports.length === 0;
-      if (isEdge) {
-        forEach(file);
-      }
-      return isEdge;
-    });
+    const isEdge = nonCheckedImports.length === 0;
+    if (isEdge) {
+      forEach(file);
+    }
+    return isEdge;
+  });
 };
 
-async function getCheckedFiles(tsconfig, srcRoot) {
+async function getCheckedFiles(tsconfig, vscodeRoot) {
   const set = new Set(
-    tsconfig.files.map((include) => path.join(srcRoot, include))
+    tsconfig.files.map((include) => path.join(vscodeRoot, include))
   );
   if (tsconfig.include) {
     const includes = tsconfig.include.map((include) => {
       return new Promise((resolve, reject) => {
-        glob(path.join(srcRoot, include), (err, files) => {
+        glob(path.join(vscodeRoot, include), (err, files) => {
           if (err) {
             return reject(err);
           }
