@@ -15,7 +15,7 @@ $ npm install
 The main script prints of list of files that are eligible for strict null checks. This includes all files that only import files thare are already strict null checked. 
 
 ```bash
-$ node index.js /path/to/vscode
+$ node index.js /path/to/kapwing/client
 ```
 
 **autoAdd.js**
@@ -23,5 +23,5 @@ $ node index.js /path/to/vscode
 Very simple script that tries to auto add any eligible file to the `tsconfig.strictNullChecks.json`. This iteratively compiles the `tsconfig` project with just that file added. If there are no errors, it is added to the `tsconfig`
 
 ```bash
-$ node autoAdd.js /path/to/vscode
+$ node autoAdd.js /path/to/kapwing/client
 ```
