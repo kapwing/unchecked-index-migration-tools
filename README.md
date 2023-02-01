@@ -1,3 +1,7 @@
+A fork of the Vscode team's scripts they used to progressively adopt the `strictNullChecks` TS rule.  The process they used is describe [in this blog post](https://code.visualstudio.com/blogs/2019/05/23/strict-null).  The scripts have been modified for the Kapwing repo so we can migrate to using the `noUncheckedIndexedAccess` TS rule.
+
+# Original README
+
 Scripts to help [migrate VS Code to use strict null checks](https://github.com/Microsoft/vscode/issues/60565)
 
 ## Usage
