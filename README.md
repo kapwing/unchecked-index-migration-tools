@@ -20,7 +20,7 @@ $ node index.js /path/to/kapwing/client
 
 **autoAdd.js**
 
-Very simple script that tries to auto add any eligible file to the `tsconfig.strictNullChecks.json`. This iteratively compiles the `tsconfig` project with just that file added. If there are no errors, it is added to the `tsconfig`
+Very simple script that tries to auto add any eligible file to the `tsconfig.uncheckedIndex.json`. This iteratively compiles the `tsconfig` project with just that file added. If there are no errors, it is added to the `tsconfig`
 
 ```bash
 $ node autoAdd.js /path/to/kapwing/client
