@@ -18,8 +18,8 @@ const forEachFileInSrc = (srcRoot, options) => {
       return resolve(
         files.filter((file) => {
           if (file.endsWith(".d.ts")) return false;
-          if (options && options.includeTests) {
-            return !file.endsWith(".test.ts") && !file.endsWith(".test.tsx");
+          if (options && !options.includeTests && (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))) {
+            return false;
           }
           return true;
         })
