@@ -34,7 +34,7 @@ module.exports.forEachFileInSrc = forEachFileInSrc;
  * @param {(file: string) => void} forEach
  * @param {{ includeTests: boolean }} [options]
  */
-module.exports.forStrictNullCheckEligibleFiles = async (
+module.exports.forUncheckedIndexEligbleFiles = async (
   vscodeRoot,
   forEach,
   options

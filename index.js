@@ -2,7 +2,7 @@
 const path = require("path");
 const glob = require("glob");
 const {
-  forStrictNullCheckEligibleFiles,
+  forUncheckedIndexEligbleFiles,
   forEachFileInSrc,
 } = require("./src/getStrictNullCheckEligibleFiles");
 const { getImportsForFile } = require("./src/tsHelper");
@@ -23,7 +23,7 @@ if (false) {
   includeTests = true;
 }
 
-forStrictNullCheckEligibleFiles(vscodeRoot, () => {}, { includeTests }).then(
+forUncheckedIndexEligbleFiles(vscodeRoot, () => {}, { includeTests }).then(
   async (eligibleFiles) => {
     const eligibleSet = new Set(eligibleFiles);
 

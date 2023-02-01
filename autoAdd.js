@@ -4,7 +4,7 @@ const fs = require("fs");
 const child_process = require("child_process");
 const config = require("./src/config");
 const {
-  forStrictNullCheckEligibleFiles,
+  forUncheckedIndexEligbleFiles,
 } = require("./src/getStrictNullCheckEligibleFiles");
 
 const vscodeRoot = path.join(process.cwd(), process.argv[2]);
@@ -13,7 +13,7 @@ const srcRoot = path.join(vscodeRoot, "src");
 const buildCompletePattern =
   /Found (\d+) errors?\. Watching for file changes\./gi;
 
-forStrictNullCheckEligibleFiles(vscodeRoot, () => {}).then(async (files) => {
+forUncheckedIndexEligbleFiles(vscodeRoot, () => {}).then(async (files) => {
   const tsconfigPath = path.join(srcRoot, config.targetTsconfig);
 
   const child = child_process.spawn("tsc", ["-p", tsconfigPath, "--watch"]);
