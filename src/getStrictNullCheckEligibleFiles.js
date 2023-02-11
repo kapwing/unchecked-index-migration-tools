@@ -21,7 +21,6 @@ const forEachFileInSrc = (srcRoot, options) => {
 
         return resolve(
           files.filter((file) => {
-            if (file.endsWith(".d.ts")) return false;
             if (
               options &&
               !options.includeTests &&
