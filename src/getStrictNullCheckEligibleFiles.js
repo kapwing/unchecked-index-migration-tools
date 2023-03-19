@@ -24,7 +24,9 @@ const forEachFileInSrc = (srcRoot, options) => {
             if (
               options &&
               !options.includeTests &&
-              (file.endsWith(".test.ts") || file.endsWith(".test.tsx"))
+              (file.endsWith(".test.ts") ||
+                file.endsWith(".test.tsx") ||
+                file.endsWith(".stories.tsx"))
             ) {
               return false;
             }
