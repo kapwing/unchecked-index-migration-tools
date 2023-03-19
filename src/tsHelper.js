@@ -28,6 +28,8 @@ const disallowedPackageRegexes = [
   /^@giphy/,
   /^@rehooks/,
   /^@typeform/,
+  /^@storybook/,
+  /^@radix-ui/,
 ];
 
 module.exports.getImportsForFile = function getImportsForFile(file, srcRoot) {
