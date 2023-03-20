@@ -59,6 +59,5 @@ forUncheckedIndexEligbleFiles(vscodeRoot, () => {}, { includeTests }).then(
 );
 
 function toFormattedFilePath(file) {
-  // return `"./${path.relative(srcRoot, file)}",`;
-  return `- [ ] \`"./${path.relative(srcRoot, file)}"\``;
+  return `\t"./${path.relative(path.join(srcRoot, ".."), file)}",\t`;
 }
