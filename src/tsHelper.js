@@ -30,6 +30,7 @@ const disallowedPackageRegexes = [
   /^@typeform/,
   /^@storybook/,
   /^@radix-ui/,
+  /^react-select/,
 ];
 
 module.exports.getImportsForFile = function getImportsForFile(file, srcRoot) {
